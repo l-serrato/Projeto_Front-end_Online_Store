@@ -68,12 +68,17 @@ export default class Home extends Component {
           <section>
             {result.map((eachResult) => (
               <div data-testid="product" key={ eachResult.id }>
-                <img src={ eachResult.thumbnail } alt="" />
-                <span>{eachResult.title}</span>
-                <span>
-                  { eachResult.price }
-                  { eachResult.currency_id }
-                </span>
+                <Link
+                  data-testid="product-detail-link"
+                  to={ `/listdetails/${eachResult.id}` }
+                >
+                  <img src={ eachResult.thumbnail } alt="" />
+                  <span>{eachResult.title}</span>
+                  <span>
+                    { eachResult.price }
+                    { eachResult.currency_id }
+                  </span>
+                </Link>
               </div>
             ))}
           </section>
