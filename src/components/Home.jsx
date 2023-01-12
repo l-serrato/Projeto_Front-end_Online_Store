@@ -1,25 +1,27 @@
 import React, { Component } from 'react';
-import * as api from '../services/api';
+import { Link } from 'react-router-dom';
+import { getCategories, getProductsFromCategoryAndQuery } from '../services/api';
 
 export default class Home extends Component {
-  constructor() {
-    super();
-
-    this.state = {
-      search: '',
-      categories: [],
-      result: [],
-    };
-  }
+  state = {
+    loading: true,
+    infoCategory: undefined,
+    search: '',
+    result: '',
+  };
 
   componentDidMount() {
-    api.getCategories();
-    api.getCategories().then((data) => {
-      this.setState({
-        categories: data,
-      });
-    });
+    this.funcGetCategories();
   }
+
+  funcGetCategories = async () => {
+    const infoCategory = await getCategories();
+    console.log();
+    this.setState({
+      loading: false,
+      infoCategory,
+    });
+  };
 
   inputText = ({ target }) => {
     this.setState({
@@ -28,9 +30,9 @@ export default class Home extends Component {
   };
 
   searchButton = async () => {
-    const { search, categories } = this.state;
-    console.log(categories);
-    const apiSearch = api.getProductsFromCategoryAndQuery;
+    const { search, infoCategory } = this.state;
+    console.log(infoCategory);
+    const apiSearch = getProductsFromCategoryAndQuery;
     const response = await apiSearch('', search);
     const result = response.results;
     this.setState({
@@ -39,8 +41,7 @@ export default class Home extends Component {
   };
 
   render() {
-    const { search, result, categories } = this.state;
-
+    const { loading, infoCategory, result, search } = this.state;
     return (
       <>
         <input
@@ -74,12 +75,17 @@ export default class Home extends Component {
             Digite algum termo de pesquisa ou escolha uma categoria.
           </h1>
         ) : ''}
-
-        {categories.map((cat) => (
-          <button data-testid="category" type="button" key={ cat.id }>
-            {cat.name}
-          </button>
-        ))}
+        <Link data-testid="shopping-cart-button" to="/cart">
+          <button type="button">Carrinho</button>
+        </Link>
+        <div>
+          {loading ? null
+            : infoCategory.map((elemento) => (
+              <button data-testid="category" key={ elemento.id } type="button">
+                {elemento.name}
+              </button>
+            ))}
+        </div>
       </>
     );
   }
