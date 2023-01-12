@@ -40,6 +40,14 @@ export default class Home extends Component {
     });
   };
 
+  categs = async (event) => {
+    const { name } = event.target;
+    const categoria = await getProductsFromCategoryAndQuery(name);
+    this.setState({
+      result: categoria.results,
+    });
+  };
+
   render() {
     const { loading, infoCategory, result, search } = this.state;
     return (
@@ -81,7 +89,14 @@ export default class Home extends Component {
         <div>
           {loading ? null
             : infoCategory.map((elemento) => (
-              <button data-testid="category" key={ elemento.id } type="button">
+              <button
+                name={ elemento.id }
+                data-testid="category"
+                key={ elemento.id }
+                type="button"
+                onClick={ (event) => this.categs(event) }
+              >
+
                 {elemento.name}
               </button>
             ))}
