@@ -48,6 +48,17 @@ export default class Home extends Component {
     });
   };
 
+  addCart = (event, eachResult) => {
+    // console.log(eachResult);
+    const lista = JSON.parse(localStorage.getItem('IDS')) || [];
+    // console.log(lista);
+    // console.log(eachResult);
+    // const repeatItem = lista.filter((elemento) => elemento === eachResult.id);
+    // console.log(repeatItem);
+    lista.push(eachResult);
+    localStorage.setItem('IDS', JSON.stringify(lista));
+  };
+
   render() {
     const { loading, infoCategory, result, search } = this.state;
     return (
@@ -79,6 +90,13 @@ export default class Home extends Component {
                     { eachResult.currency_id }
                   </span>
                 </Link>
+                <button
+                  data-testid="product-add-to-cart"
+                  onClick={ (event) => this.addCart(event, eachResult) }
+                  type="button"
+                >
+                  Adicionar ao Carrinho
+                </button>
               </div>
             ))}
           </section>
