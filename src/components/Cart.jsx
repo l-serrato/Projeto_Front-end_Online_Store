@@ -1,4 +1,5 @@
 import { Component } from 'react';
+import { Link } from 'react-router-dom';
 
 export default class Cart extends Component {
   state = {
@@ -101,6 +102,9 @@ export default class Cart extends Component {
             </div>
           </div>
         )) : <h1 data-testid="shopping-cart-empty-message">Seu carrinho está vazio</h1>}
+        {productIds
+          ? <Link to="/checkout" data-testid="checkout-products">Finalizar Compra</Link>
+          : null}
       </div>
     );
   }
