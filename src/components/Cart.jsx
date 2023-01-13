@@ -3,7 +3,7 @@ import { Component } from 'react';
 export default class Cart extends Component {
   state = {
     loading: true,
-    productIds: [],
+    productIds: undefined,
   };
 
   async componentDidMount() {
@@ -33,7 +33,7 @@ export default class Cart extends Component {
   funcAdd = ({ target: { name } }) => {
     const getProducts = JSON.parse(localStorage.getItem('IDS'));
     const verific = getProducts.find((elemento) => elemento.id === name);
-    console.log(verific);
+    // console.log(verific);
     let { contTeste } = verific;
     contTeste = contTeste || 1;
     verific.contTeste = contTeste + 1;
@@ -46,7 +46,7 @@ export default class Cart extends Component {
   funcMinus = ({ target: { name } }) => {
     const getProducts = JSON.parse(localStorage.getItem('IDS'));
     const verific = getProducts.find((elemento) => elemento.id === name);
-    console.log(verific);
+    // console.log(verific);
     let { contTeste } = verific;
     contTeste = contTeste || 1;
     verific.contTeste = contTeste - 1;
@@ -62,7 +62,7 @@ export default class Cart extends Component {
     return (
       <div>
         {loading ? <h1>Carregando...</h1> : null}
-        {productIds.length > 0 ? productIds.map((elemento) => (
+        {productIds ? productIds.map((elemento) => (
           <div key={ elemento.id }>
             <p
               data-testid="shopping-cart-product-name"
