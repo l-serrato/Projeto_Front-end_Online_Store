@@ -16,7 +16,7 @@ export default class Home extends Component {
 
   funcGetCategories = async () => {
     const infoCategory = await getCategories();
-    console.log();
+    // console.log();
     this.setState({
       loading: false,
       infoCategory,
@@ -30,8 +30,8 @@ export default class Home extends Component {
   };
 
   searchButton = async () => {
-    const { search, infoCategory } = this.state;
-    console.log(infoCategory);
+    const { search } = this.state;
+    // console.log(infoCategory);
     const apiSearch = getProductsFromCategoryAndQuery;
     const response = await apiSearch('', search);
     const result = response.results;
@@ -50,13 +50,23 @@ export default class Home extends Component {
 
   addCart = (event, eachResult) => {
     // console.log(eachResult);
-    const lista = JSON.parse(localStorage.getItem('IDS')) || [];
-    // console.log(lista);
-    // console.log(eachResult);
-    // const repeatItem = lista.filter((elemento) => elemento === eachResult.id);
-    // console.log(repeatItem);
-    lista.push(eachResult);
-    localStorage.setItem('IDS', JSON.stringify(lista));
+    const getStorage = JSON.parse(localStorage.getItem('IDS')) || [];
+    const verific = getStorage.length > 0
+      ? getStorage.find((elemento) => elemento.id === eachResult.id) : false;
+    // console.log(verific);
+    if (verific) {
+      let { contTeste } = verific;
+      contTeste = contTeste ? contTeste + 1 : 2;
+      verific.contTeste = contTeste;
+      // console.log(verific);
+      const filtro = getStorage.filter((elemento) => elemento.id !== eachResult.id);
+      // console.log(filtro);
+      filtro.push(verific);
+      localStorage.setItem('IDS', JSON.stringify(filtro));
+    } else {
+      getStorage.push(eachResult);
+      localStorage.setItem('IDS', JSON.stringify(getStorage));
+    }
   };
 
   render() {
