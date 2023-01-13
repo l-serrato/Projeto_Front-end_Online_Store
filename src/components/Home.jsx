@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import addCart from '../services/addCart';
 import { getCategories, getProductsFromCategoryAndQuery } from '../services/api';
 
 export default class Home extends Component {
@@ -16,7 +17,7 @@ export default class Home extends Component {
 
   funcGetCategories = async () => {
     const infoCategory = await getCategories();
-    console.log();
+    // console.log();
     this.setState({
       loading: false,
       infoCategory,
@@ -30,8 +31,8 @@ export default class Home extends Component {
   };
 
   searchButton = async () => {
-    const { search, infoCategory } = this.state;
-    console.log(infoCategory);
+    const { search } = this.state;
+    // console.log(infoCategory);
     const apiSearch = getProductsFromCategoryAndQuery;
     const response = await apiSearch('', search);
     const result = response.results;
@@ -79,6 +80,13 @@ export default class Home extends Component {
                     { eachResult.currency_id }
                   </span>
                 </Link>
+                <button
+                  data-testid="product-add-to-cart"
+                  onClick={ () => addCart(eachResult) }
+                  type="button"
+                >
+                  Adicionar ao Carrinho
+                </button>
               </div>
             ))}
           </section>
