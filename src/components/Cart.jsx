@@ -1,9 +1,10 @@
 import { Component } from 'react';
+import { Link } from 'react-router-dom';
 
 export default class Cart extends Component {
   state = {
     loading: true,
-    productIds: [],
+    productIds: undefined,
   };
 
   async componentDidMount() {
@@ -18,6 +19,42 @@ export default class Cart extends Component {
       loading: false,
       productIds,
     });
+  };
+
+  FuncExcluir = ({ target: { value, name } }) => {
+    const getProducts = JSON.parse(localStorage.getItem('IDS'));
+    const decisao = value === 'Excluir';
+    if (decisao || (value === '-' && contTeste === 1)) {
+      const filtro = getProducts.filter((elemento) => elemento.id !== name);
+      localStorage.setItem('IDS', JSON.stringify(filtro));
+    }
+    this.funcGetLocalStorage();
+  };
+
+  funcAdd = ({ target: { name } }) => {
+    const getProducts = JSON.parse(localStorage.getItem('IDS'));
+    const verific = getProducts.find((elemento) => elemento.id === name);
+    // console.log(verific);
+    let { contTeste } = verific;
+    contTeste = contTeste || 1;
+    verific.contTeste = contTeste + 1;
+    const filtro = getProducts.filter((elemento) => elemento.id !== name);
+    filtro.push(verific);
+    localStorage.setItem('IDS', JSON.stringify(filtro));
+    this.funcGetLocalStorage();
+  };
+
+  funcMinus = ({ target: { name } }) => {
+    const getProducts = JSON.parse(localStorage.getItem('IDS'));
+    const verific = getProducts.find((elemento) => elemento.id === name);
+    // console.log(verific);
+    let { contTeste } = verific;
+    contTeste = contTeste || 1;
+    verific.contTeste = contTeste - 1;
+    const filtro = getProducts.filter((elemento) => elemento.id !== name);
+    filtro.push(verific);
+    localStorage.setItem('IDS', JSON.stringify(filtro));
+    this.funcGetLocalStorage();
   };
 
   render() {
@@ -36,8 +73,38 @@ export default class Cart extends Component {
             <p data-testid="shopping-cart-product-quantity">
               {elemento.contTeste ? elemento.contTeste : 1}
             </p>
+            <div>
+              <button
+                onClick={ (event) => this.funcAdd(event) }
+                type="button"
+                data-testid="product-increase-quantity"
+                name={ elemento.id }
+              >
+                +
+              </button>
+              <button
+                onClick={ (event) => this.funcMinus(event) }
+                type="button"
+                data-testid="product-decrease-quantity"
+                name={ elemento.id }
+              >
+                -
+              </button>
+              <button
+                onClick={ (event) => this.FuncExcluir(event) }
+                type="button"
+                data-testid="remove-product"
+                name={ elemento.id }
+                value="Excluir"
+              >
+                Excluir
+              </button>
+            </div>
           </div>
         )) : <h1 data-testid="shopping-cart-empty-message">Seu carrinho está vazio</h1>}
+        {productIds
+          ? <Link to="/checkout" data-testid="checkout-products">Finalizar Compra</Link>
+          : null}
       </div>
     );
   }

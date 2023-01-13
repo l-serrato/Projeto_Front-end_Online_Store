@@ -34,7 +34,10 @@ class ListDetails extends Component {
           src={ data ? data.thumbnail : '' }
           alt=""
         />
-        <h2 data-testid="product-detail-price">{data ? data.price : ''}</h2>
+        <h2 data-testid="product-detail-price">
+          R$
+          {data ? data.price : ''}
+        </h2>
         <button
           type="button"
           data-testid="product-detail-add-to-cart"

@@ -4,6 +4,7 @@ import { Route, Switch } from 'react-router-dom';
 import Home from './components/Home';
 import Cart from './components/Cart';
 import ListDetails from './components/ListDetails';
+import Checkout from './components/Chekout';
 
 class App extends Component {
   render() {
@@ -20,7 +21,17 @@ class App extends Component {
           path="/cart"
           exact
           render={ () => (
+
             <Cart />
+
+          ) }
+        />
+        <Route
+          data-testid="checkout-products"
+          exact
+          path="/checkout"
+          render={ (props) => (
+            <Checkout { ...props } />
           ) }
         />
         <Route className="App" exact path="/">
