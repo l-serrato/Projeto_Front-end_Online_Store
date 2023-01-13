@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import addCart from '../services/addCart';
 import { getCategories, getProductsFromCategoryAndQuery } from '../services/api';
 
 export default class Home extends Component {
@@ -48,27 +49,6 @@ export default class Home extends Component {
     });
   };
 
-  addCart = (event, eachResult) => {
-    // console.log(eachResult);
-    const getStorage = JSON.parse(localStorage.getItem('IDS')) || [];
-    const verific = getStorage.length > 0
-      ? getStorage.find((elemento) => elemento.id === eachResult.id) : false;
-    // console.log(verific);
-    if (verific) {
-      let { contTeste } = verific;
-      contTeste = contTeste ? contTeste + 1 : 2;
-      verific.contTeste = contTeste;
-      // console.log(verific);
-      const filtro = getStorage.filter((elemento) => elemento.id !== eachResult.id);
-      // console.log(filtro);
-      filtro.push(verific);
-      localStorage.setItem('IDS', JSON.stringify(filtro));
-    } else {
-      getStorage.push(eachResult);
-      localStorage.setItem('IDS', JSON.stringify(getStorage));
-    }
-  };
-
   render() {
     const { loading, infoCategory, result, search } = this.state;
     return (
@@ -102,7 +82,7 @@ export default class Home extends Component {
                 </Link>
                 <button
                   data-testid="product-add-to-cart"
-                  onClick={ (event) => this.addCart(event, eachResult) }
+                  onClick={ () => addCart(eachResult) }
                   type="button"
                 >
                   Adicionar ao Carrinho
