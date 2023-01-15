@@ -3,17 +3,21 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { getProductById } from '../services/api';
 import addCart from '../services/addCart';
+import controlLS from '../services/controlLS';
 
 class ListDetails extends Component {
   state = {
     data: undefined,
-    avaliation: '',
+    text: '',
     email: '',
     rating: undefined,
+    valid: true,
+    feedbacks: undefined,
   };
 
   componentDidMount() {
     this.funcGetProduct();
+    this.funcGetLocalStorage();
   }
 
   funcGetProduct = async () => {
@@ -27,9 +31,23 @@ class ListDetails extends Component {
   };
 
   checkForm = () => {
-    const { email, rating, avaliation } = this.state;
+    const { email, rating, text } = this.state;
+    const { match: { params: { id } } } = this.props;
     if (email.length > 0 && email.includes('@') && rating) {
-      const dict = undefined;
+      this.setState({
+        valid: true,
+      });
+      controlLS(id, { email, rating, text });
+      this.funcGetLocalStorage();
+      this.setState({
+        rating: undefined,
+        email: '',
+        text: '',
+      });
+    } else {
+      this.setState({
+        valid: false,
+      });
     }
   };
 
@@ -45,9 +63,16 @@ class ListDetails extends Component {
     });
   };
 
-  render() {
-    const { data, avaliation, email } = this.state;
+  funcGetLocalStorage = () => {
+    const { match: { params: { id } } } = this.props;
+    const feedbacks = JSON.parse(localStorage.getItem(`${id}`));
+    this.setState({
+      feedbacks,
+    });
+  };
 
+  render() {
+    const { data, text, email, valid, feedbacks } = this.state;
     return (
       <div>
         <h1 data-testid="product-detail-name">{data ? data.title : null}</h1>
@@ -137,9 +162,9 @@ class ListDetails extends Component {
           <textarea
             data-testid="product-detail-evaluation"
             placeholder="Mensagem (opcional)"
-            name="avaliation"
+            name="text"
             onChange={ this.upText }
-            value={ avaliation }
+            value={ text }
             type="text"
           />
           <br />
@@ -150,6 +175,14 @@ class ListDetails extends Component {
           >
             Avaliar
           </button>
+          {valid ? null : <h1 data-testid="error-msg">Campos inválidos</h1>}
+          {feedbacks ? feedbacks.map((elemento, index) => (
+            <div key={ index }>
+              <h1 data-testid="review-card-email">{elemento.email}</h1>
+              <h1 data-testid="review-card-rating">{elemento.rating}</h1>
+              <h1 data-testid="review-card-evaluation">{elemento.text}</h1>
+            </div>
+          )) : null}
         </form>
       </div>
     );
