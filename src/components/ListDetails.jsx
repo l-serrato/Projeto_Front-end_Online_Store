@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { getProductById } from '../services/api';
 import addCart from '../services/addCart';
 import controlLS from '../services/controlLS';
+import { getCart } from '../services/cart';
 
 class ListDetails extends Component {
   state = {
@@ -13,11 +14,13 @@ class ListDetails extends Component {
     rating: undefined,
     valid: true,
     feedbacks: undefined,
+    numberCart: undefined,
   };
 
   componentDidMount() {
     this.funcGetProduct();
     this.funcGetLocalStorage();
+    this.funcAddCart();
   }
 
   funcGetProduct = async () => {
@@ -71,8 +74,16 @@ class ListDetails extends Component {
     });
   };
 
+  funcAddCart = (eachResult) => {
+    if (eachResult) addCart(eachResult);
+    const numberCart = getCart();
+    this.setState({
+      numberCart,
+    });
+  };
+
   render() {
-    const { data, text, email, valid, feedbacks } = this.state;
+    const { data, text, email, valid, feedbacks, numberCart } = this.state;
     return (
       <div>
         <h1 data-testid="product-detail-name">{data ? data.title : null}</h1>
@@ -88,7 +99,7 @@ class ListDetails extends Component {
         <button
           type="button"
           data-testid="product-detail-add-to-cart"
-          onClick={ () => addCart(data) }
+          onClick={ () => this.funcAddCart(data) }
         >
           Adicionar ao carrinho de compras
         </button>
@@ -100,6 +111,7 @@ class ListDetails extends Component {
             Carrinho de compras
           </button>
         </Link>
+        <p data-testid="shopping-cart-size">{numberCart}</p>
         <form>
           <h1>Avaliações</h1>
           <input

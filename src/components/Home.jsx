@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import addCart from '../services/addCart';
 import { getCategories, getProductsFromCategoryAndQuery } from '../services/api';
+import { getCart } from '../services/cart';
 
 export default class Home extends Component {
   state = {
@@ -9,10 +10,12 @@ export default class Home extends Component {
     infoCategory: undefined,
     search: '',
     result: '',
+    numberCart: 0,
   };
 
   componentDidMount() {
     this.funcGetCategories();
+    this.funcAddCart();
   }
 
   funcGetCategories = async () => {
@@ -49,8 +52,16 @@ export default class Home extends Component {
     });
   };
 
+  funcAddCart = (eachResult) => {
+    if (eachResult) addCart(eachResult);
+    const numberCart = getCart();
+    this.setState({
+      numberCart,
+    });
+  };
+
   render() {
-    const { loading, infoCategory, result, search } = this.state;
+    const { loading, infoCategory, result, search, numberCart } = this.state;
     return (
       <>
         <input
@@ -82,7 +93,7 @@ export default class Home extends Component {
                 </Link>
                 <button
                   data-testid="product-add-to-cart"
-                  onClick={ () => addCart(eachResult) }
+                  onClick={ () => this.funcAddCart(eachResult) }
                   type="button"
                 >
                   Adicionar ao Carrinho
@@ -99,6 +110,7 @@ export default class Home extends Component {
         <Link data-testid="shopping-cart-button" to="/cart">
           <button type="button">Carrinho</button>
         </Link>
+        <p data-testid="shopping-cart-size">{numberCart}</p>
         <div>
           {loading ? null
             : infoCategory.map((elemento) => (
