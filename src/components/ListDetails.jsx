@@ -7,6 +7,9 @@ import addCart from '../services/addCart';
 class ListDetails extends Component {
   state = {
     data: undefined,
+    avaliation: '',
+    email: '',
+    rating: undefined,
   };
 
   componentDidMount() {
@@ -23,8 +26,27 @@ class ListDetails extends Component {
     });
   };
 
+  checkForm = () => {
+    const { email, rating, avaliation } = this.state;
+    if (email.length > 0 && email.includes('@') && rating) {
+      const dict = undefined;
+    }
+  };
+
+  upText = ({ target: { name, value } }) => {
+    this.setState({
+      [name]: value,
+    });
+  };
+
+  getRating = ({ target: { value } }) => {
+    this.setState({
+      rating: value,
+    });
+  };
+
   render() {
-    const { data } = this.state;
+    const { data, avaliation, email } = this.state;
 
     return (
       <div>
@@ -53,6 +75,82 @@ class ListDetails extends Component {
             Carrinho de compras
           </button>
         </Link>
+        <form>
+          <h1>Avaliações</h1>
+          <input
+            data-testid="product-detail-email"
+            placeholder="Email"
+            onChange={ this.upText }
+            name="email"
+            value={ email }
+            type="text"
+            required
+          />
+          <label htmlFor="/">
+            <input
+              type="radio"
+              data-testid="1-rating"
+              onChange={ this.getRating }
+              id="1"
+              name="rating"
+              value="1"
+
+            />
+            <input
+              type="radio"
+              data-testid="2-rating"
+              onChange={ this.getRating }
+              id="2"
+              name="rating"
+              value="2"
+
+            />
+            <input
+              type="radio"
+              data-testid="3-rating"
+              onChange={ this.getRating }
+              id="3"
+              name="rating"
+              value="3"
+
+            />
+            <input
+              type="radio"
+              data-testid="4-rating"
+              onChange={ this.getRating }
+              id="4"
+              name="rating"
+              value="4"
+
+            />
+            <input
+              type="radio"
+              data-testid="5-rating"
+              onChange={ this.getRating }
+              id="5"
+              name="rating"
+              value="5"
+
+            />
+          </label>
+          <br />
+          <textarea
+            data-testid="product-detail-evaluation"
+            placeholder="Mensagem (opcional)"
+            name="avaliation"
+            onChange={ this.upText }
+            value={ avaliation }
+            type="text"
+          />
+          <br />
+          <button
+            type="button"
+            data-testid="submit-review-btn"
+            onClick={ this.checkForm }
+          >
+            Avaliar
+          </button>
+        </form>
       </div>
     );
   }
