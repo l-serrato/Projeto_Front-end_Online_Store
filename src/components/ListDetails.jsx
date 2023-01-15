@@ -3,14 +3,21 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { getProductById } from '../services/api';
 import addCart from '../services/addCart';
+import controlLS from '../services/controlLS';
 
 class ListDetails extends Component {
   state = {
     data: undefined,
+    text: '',
+    email: '',
+    rating: undefined,
+    valid: true,
+    feedbacks: undefined,
   };
 
   componentDidMount() {
     this.funcGetProduct();
+    this.funcGetLocalStorage();
   }
 
   funcGetProduct = async () => {
@@ -23,9 +30,49 @@ class ListDetails extends Component {
     });
   };
 
-  render() {
-    const { data } = this.state;
+  checkForm = () => {
+    const { email, rating, text } = this.state;
+    const { match: { params: { id } } } = this.props;
+    if (email.length > 0 && email.includes('@') && rating) {
+      this.setState({
+        valid: true,
+      });
+      controlLS(id, { email, rating, text });
+      this.funcGetLocalStorage();
+      this.setState({
+        rating: undefined,
+        email: '',
+        text: '',
+      });
+    } else {
+      this.setState({
+        valid: false,
+      });
+    }
+  };
 
+  upText = ({ target: { name, value } }) => {
+    this.setState({
+      [name]: value,
+    });
+  };
+
+  getRating = ({ target: { value } }) => {
+    this.setState({
+      rating: value,
+    });
+  };
+
+  funcGetLocalStorage = () => {
+    const { match: { params: { id } } } = this.props;
+    const feedbacks = JSON.parse(localStorage.getItem(`${id}`));
+    this.setState({
+      feedbacks,
+    });
+  };
+
+  render() {
+    const { data, text, email, valid, feedbacks } = this.state;
     return (
       <div>
         <h1 data-testid="product-detail-name">{data ? data.title : null}</h1>
@@ -53,6 +100,90 @@ class ListDetails extends Component {
             Carrinho de compras
           </button>
         </Link>
+        <form>
+          <h1>Avaliações</h1>
+          <input
+            data-testid="product-detail-email"
+            placeholder="Email"
+            onChange={ this.upText }
+            name="email"
+            value={ email }
+            type="text"
+            required
+          />
+          <label htmlFor="/">
+            <input
+              type="radio"
+              data-testid="1-rating"
+              onChange={ this.getRating }
+              id="1"
+              name="rating"
+              value="1"
+
+            />
+            <input
+              type="radio"
+              data-testid="2-rating"
+              onChange={ this.getRating }
+              id="2"
+              name="rating"
+              value="2"
+
+            />
+            <input
+              type="radio"
+              data-testid="3-rating"
+              onChange={ this.getRating }
+              id="3"
+              name="rating"
+              value="3"
+
+            />
+            <input
+              type="radio"
+              data-testid="4-rating"
+              onChange={ this.getRating }
+              id="4"
+              name="rating"
+              value="4"
+
+            />
+            <input
+              type="radio"
+              data-testid="5-rating"
+              onChange={ this.getRating }
+              id="5"
+              name="rating"
+              value="5"
+
+            />
+          </label>
+          <br />
+          <textarea
+            data-testid="product-detail-evaluation"
+            placeholder="Mensagem (opcional)"
+            name="text"
+            onChange={ this.upText }
+            value={ text }
+            type="text"
+          />
+          <br />
+          <button
+            type="button"
+            data-testid="submit-review-btn"
+            onClick={ this.checkForm }
+          >
+            Avaliar
+          </button>
+          {valid ? null : <h1 data-testid="error-msg">Campos inválidos</h1>}
+          {feedbacks ? feedbacks.map((elemento, index) => (
+            <div key={ index }>
+              <h1 data-testid="review-card-email">{elemento.email}</h1>
+              <h1 data-testid="review-card-rating">{elemento.rating}</h1>
+              <h1 data-testid="review-card-evaluation">{elemento.text}</h1>
+            </div>
+          )) : null}
+        </form>
       </div>
     );
   }
