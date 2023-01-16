@@ -34,10 +34,11 @@ export default class Cart extends Component {
   funcAdd = ({ target: { name } }) => {
     const getProducts = JSON.parse(localStorage.getItem('IDS'));
     const verific = getProducts.find((elemento) => elemento.id === name);
-    // console.log(verific);
+    console.log(verific);
     let { contTeste } = verific;
     contTeste = contTeste || 1;
-    verific.contTeste = contTeste + 1;
+    verific.contTeste = verific.available_quantity > contTeste
+      ? contTeste + 1 : contTeste;
     const filtro = getProducts.filter((elemento) => elemento.id !== name);
     filtro.push(verific);
     localStorage.setItem('IDS', JSON.stringify(filtro));
