@@ -1,3 +1,5 @@
+import cart from './cart';
+
 const addCart = (eachResult) => {
   const getStorage = JSON.parse(localStorage.getItem('IDS')) || [];
   const verific = getStorage.length > 0
@@ -13,6 +15,7 @@ const addCart = (eachResult) => {
     getStorage.push(eachResult);
     localStorage.setItem('IDS', JSON.stringify(getStorage));
   }
+  cart();
 };
 
 export default addCart;
