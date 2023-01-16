@@ -98,6 +98,8 @@ export default class Home extends Component {
                 >
                   Adicionar ao Carrinho
                 </button>
+                {eachResult.shipping.free_shipping
+                  ? <p data-testid="free-shipping">Frete grátis</p> : null}
               </div>
             ))}
           </section>
