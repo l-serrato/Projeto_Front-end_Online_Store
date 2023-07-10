@@ -2,7 +2,7 @@
 
 ## Habilidades Desenvolvidas
 
-Neste projeto desnvolvi uma versão simplificada, sem persistência no banco de dados, de uma **loja online**, desenvolvendo como parte de uma equipe suas funcionalidades de acordo com demandas definidas em um quadro _Kanban_.
+Neste projeto desenvolvi uma versão simplificada, sem persistência no banco de dados, de uma **loja online**, desenvolvendo como parte de uma equipe suas funcionalidades de acordo com demandas definidas em um quadro _Kanban_.
 A partir dessas demandas, teremos uma aplicação em que pessoas usuárias poderão:
   - Buscar produtos por termos e categorias a partir da _API do Mercado Livre_;
   - Interagir com os produtos buscados de modo a adicioná-los e removê-los de um carrinho de compras em diferentes quantidades;
